@@ -5798,6 +5798,13 @@ ra-core@^2.0.0:
     reselect "~3.0.0"
     warning "~3.0.0"
 
+ra-data-json-server@^2.0.0:
+  version "2.0.0"
+  resolved "http://registry.npm.taobao.org/ra-data-json-server/download/ra-data-json-server-2.0.0.tgz#fd84e2b577ddc725c40f58afcdc761fcb712e1e4"
+  dependencies:
+    query-string "~5.1.1"
+    react-admin "^2.0.0"
+
 ra-language-english@^2.0.0:
   version "2.0.0"
   resolved "http://registry.npm.taobao.org/ra-language-english/download/ra-language-english-2.0.0.tgz#9f53eb4b67a57227f8122e8ab70ee15a286e12ef"

@@ -1,6 +1,7 @@
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK, AUTH_GET_PERMISSIONS } from 'react-admin';
 import {simpleRestClient, fetchUtils} from 'react-admin';
 import {REACT_APP_API_HOST} from './Configration';
+import decodeJwt from 'jwt-decode';
 
 export default (type, params) => {
     // called when the user attempts to log in
@@ -18,8 +19,10 @@ export default (type, params) => {
                 return response.json();
             })
             .then(({ token }) => {
+                const decodedToken = decodeJwt(token);
                 localStorage.setItem('token', token);
-                return Promise.resolve(token);
+                localStorage.setItem('userId', decodedToken.userId);
+                localStorage.setItem('role', decodedToken.roles);
             })
             .catch((e) => {
                 console.error(e);
@@ -29,6 +32,8 @@ export default (type, params) => {
     // called when the user clicks on the logout button
     if (type === AUTH_LOGOUT) {
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('role');
         return Promise.resolve();
     }
     // called when the API returns an error
@@ -45,6 +50,10 @@ export default (type, params) => {
         return localStorage.getItem('token')
             ? Promise.resolve()
             : Promise.reject();
+    }
+    if (type === AUTH_GET_PERMISSIONS) {
+        const role = localStorage.getItem('role');
+        return role ? Promise.resolve(role) : Promise.reject();
     }
     return Promise.reject('Unknown method');
 };

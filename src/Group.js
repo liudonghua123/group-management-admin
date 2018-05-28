@@ -1,14 +1,14 @@
 import React from 'react';
 import { List, Edit, Create, Responsive, SimpleList, Datagrid, ReferenceField, TextField, EditButton, DisabledInput, LongTextInput, Filter, ReferenceInput, SelectInput, SimpleForm, TextInput } from 'react-admin';
 
-const GroupFilter = (props) => (
+const GroupFilter = ({ permissions, ...props }) => (
     <Filter {...props}>
-        <TextInput label="Search by name" source="name" alwaysOn />
+        {permissions === 'superAdmin' ?  <TextInput label="Search by name" source="name" alwaysOn />: null}
     </Filter>
 );
 
-export const GroupList = (props) => (
-    <List {...props} filters={<GroupFilter />}>
+export const GroupList = ({ permissions, ...props }) => (
+    <List {...props} filters={<GroupFilter permissions={permissions}/>}>
         <Responsive
             small={
                 <SimpleList

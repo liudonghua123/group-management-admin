@@ -18,9 +18,12 @@ import UserGroupIcon from '@material-ui/icons/People';
 
 const App = () => (
     <Admin dashboard={Dashboard} authProvider={authProvider} dataProvider={springRestClient(`${REACT_APP_API_HOST}/api`)} >
-        <Resource options={{ label: 'Users' }} name="user" icon={UserIcon} list={UserList} edit={UserEdit} create={UserCreate} />
-        <Resource options={{ label: 'Groups' }} name="group" icon={GroupIcon} list={GroupList} edit={GroupEdit} create={GroupCreate} />
-        <Resource options={{ label: 'UserGroups' }} name="user-group" icon={UserGroupIcon}  list={UserGroupList} edit={UserGroupEdit} create={UserGroupCreate} />
+        { permissions => [
+            permissions === 'user' ? <Resource options={{ label: 'Users' }} name="user" icon={UserIcon} list={UserList} edit={UserEdit} create={null} /> : null,
+            permissions === 'superAdmin' || permissions === 'admin' ? <Resource options={{ label: 'Users' }} name="user" icon={UserIcon} list={UserList} edit={UserEdit} create={permissions === 'superAdmin' ? UserCreate: null} /> : null,
+            permissions === 'superAdmin' || permissions === 'admin' ? <Resource options={{ label: 'Groups' }} name="group" icon={GroupIcon} list={GroupList} edit={GroupEdit} create={permissions === 'superAdmin' ? GroupCreate : null} /> : null,
+            permissions === 'superAdmin' || permissions === 'admin' ? <Resource options={{ label: 'UserGroups' }} name="user-group" icon={UserGroupIcon}  list={UserGroupList} edit={UserGroupEdit} create={permissions === 'superAdmin' ? UserGroupCreate: null} /> : null,
+        ]}
     </Admin>
 );
 

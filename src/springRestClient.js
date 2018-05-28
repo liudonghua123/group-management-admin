@@ -91,10 +91,14 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
         }
 
         const token = `${localStorage.getItem('token')}`;
+        const userId = `${localStorage.getItem('userId')}`;
+        const role = `${localStorage.getItem('role')}`;
         if (!options.headers) {
             options.headers = new Headers({ Accept: 'application/json' });
         }
         options.headers.set('Authorization',`${token}`);
+        options.headers.set('X-USERID',`${userId}`);
+        options.headers.set('X-ROLE',`${role}`);
         options.user = {
             authenticated: true,
             token: token
@@ -137,7 +141,7 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
     return (type, resource, params) => {
         // json-server doesn't handle WHERE IN requests, so we fallback to calling GET_ONE n times instead
         if (type === GET_MANY) {
-            return Promise.all(params.ids.map(id => httpClient(`${apiUrl}/${resource}/${id}`, {headers: new Headers({ Authorization: `${localStorage.getItem('token')}` })})))
+            return Promise.all(params.ids.map(id => httpClient(`${apiUrl}/${resource}/${id}`, {headers: new Headers({ Authorization: `${localStorage.getItem('token')}`, 'X-USERID': `${localStorage.getItem('userId')}`, 'X-ROLE': `${localStorage.getItem('role')}` })})))
                 .then(responses => ({ data: responses.map(response => response.json) }));
         }
         const { url, options } = convertRESTRequestToHTTP(type, resource, params);

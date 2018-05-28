@@ -1,14 +1,15 @@
 import React from 'react';
 import { List, Edit, Create, Responsive, SimpleList, Datagrid, ReferenceField, TextField, BooleanField, EmailField, EditButton, DisabledInput, LongTextInput, Filter, ReferenceInput, SelectInput, SimpleForm, TextInput, BooleanInput } from 'react-admin';
+import { Button, CardActions, ListButton, ShowButton, DeleteButton, RefreshButton, } from 'react-admin';
 
-const UserFilter = (props) => (
+const UserFilter = ({ permissions, ...props }) => (
     <Filter {...props}>
-        <TextInput label="Search by uid" source="uid" alwaysOn />
+        {permissions === 'superAdmin' ? <TextInput label="Search by uid" source="uid" alwaysOn /> : null}
     </Filter>
 );
 
-export const UserList = (props) => (
-    <List {...props} filters={<UserFilter />}>
+export const UserList = ({ permissions, ...props }) => (
+    <List {...props} filters={<UserFilter permissions={permissions} />}>
         <Responsive
             small={
                 <SimpleList
@@ -41,18 +42,27 @@ const UserTitle = ({ record }) => {
     return <span>User {record ? `"${record.uid}"` : ''}</span>;
 };
 
-export const UserEdit = (props) => (
-    <Edit title={<UserTitle />} {...props}>
+const UserEditActions = ({ basePath, data, resource, permissions }) => (
+    <CardActions>
+        <ListButton basePath={basePath}/>
+        {permissions === 'admin' || permissions === 'superAdmin' ?<DeleteButton basePath={basePath} record={data} resource={resource} /> : null }
+        <RefreshButton />
+    </CardActions>
+);
+
+export const UserEdit = ({ permissions, ...props }) => (
+    <Edit title={<UserTitle />} actions={<UserEditActions permissions={permissions} />} {...props}>
         <SimpleForm>
             <DisabledInput source="id" />
-            <TextInput source="uid" />
+            {permissions === 'admin' || permissions === 'superAdmin' ?<TextInput source="uid" /> : null }
             <TextInput source="username" />
-            <TextInput source="depid" />
-            <TextInput source="depname" />
-            <TextInput source="category" />
+            <TextInput source="password" />
+            {permissions === 'admin' || permissions === 'superAdmin' ?<TextInput source="depid" /> : null }
+            {permissions === 'admin' || permissions === 'superAdmin' ?<TextInput source="depname" /> : null }
+            {permissions === 'admin' || permissions === 'superAdmin' ?<TextInput source="category" /> : null }
             <TextInput source="idnum" />
-            <BooleanInput source="expired" />
-            <BooleanInput source="disable" />
+            {permissions === 'admin' || permissions === 'superAdmin' ?<BooleanInput source="expired" /> : null }
+            {permissions === 'admin' || permissions === 'superAdmin' ?<BooleanInput source="disable" /> : null }
             <TextInput source="email" />
             <TextInput source="phone" />
         </SimpleForm>

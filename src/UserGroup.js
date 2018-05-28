@@ -1,17 +1,18 @@
 import React from 'react';
 import { List, Edit, Create, Responsive, SimpleList, Datagrid, ReferenceField, TextField, BooleanField, EditButton, DisabledInput, LongTextInput, Filter, ReferenceInput, SelectInput, SimpleForm, TextInput, BooleanInput } from 'react-admin';
 
-const UserGroupFilter = (props) => (
+const UserGroupFilter = ({ permissions, ...props }) => (
     <Filter {...props}>
-        <ReferenceInput label="Group" source="groupId" reference="group" alwaysOn>
+        {permissions === 'superAdmin' ? 
+        <ReferenceInput label="Group" source="groupId" reference="group">
             <SelectInput optionText="name" />
-        </ReferenceInput>
-        <BooleanInput label="is Admin?" source="admin" />
+        </ReferenceInput> :null},
+        {permissions === 'superAdmin' ?  <BooleanInput label="is Admin?" source="admin" /> : null},
     </Filter>
 );
 
-export const UserGroupList = (props) => (
-    <List {...props} filters={<UserGroupFilter />} sort={{ field: 'groupId', order: 'ASC' }} >
+export const UserGroupList = ({ permissions, ...props }) => (
+    <List {...props}  sort={{ field: 'groupId', order: 'ASC' }} >
         <Responsive
             small={
                 <SimpleList

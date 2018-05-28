@@ -6,13 +6,13 @@ const UserGroupFilter = ({ permissions, ...props }) => (
         {permissions === 'superAdmin' ? 
         <ReferenceInput label="Group" source="groupId" reference="group">
             <SelectInput optionText="name" />
-        </ReferenceInput> :null},
-        {permissions === 'superAdmin' ?  <BooleanInput label="is Admin?" source="admin" /> : null},
+        </ReferenceInput> :null}
+        {permissions === 'superAdmin' ?  <BooleanInput label="is Admin?" source="admin" /> : null}
     </Filter>
 );
 
 export const UserGroupList = ({ permissions, ...props }) => (
-    <List {...props}  sort={{ field: 'groupId', order: 'ASC' }} >
+    <List {...props} filters={<UserGroupFilter permissions={permissions} />} sort={{ field: 'groupId', order: 'ASC' }} >
         <Responsive
             small={
                 <SimpleList
